@@ -33,6 +33,13 @@ RUN make -j "$(nproc)"
 RUN make install
 
 FROM base
+WORKDIR /
+COPY lambda-entrypoint.sh .
+
+WORKDIR /var/runtime
+COPY bootstrap.py .
+COPY bootstrap .
+
 WORKDIR /var/task
 COPY --from=builder /var/lang /var/lang
 
@@ -40,4 +47,7 @@ RUN ln -s /var/lang/bin/python3       /var/lang/bin/python && \
 ln -s /var/lang/bin/pip3              /var/lang/bin/pip && \
 ln -s /var/lang/bin/pydoc3            /var/lang/bin/pydoc && \
 ln -s /var/lang/bin/python3-config    /var/lang/bin/python-config
-RUN python3 -m pip install -U pip setuptools wheel
+RUN python3 -m pip install -U --no-cache-dir pip setuptools wheel
+RUN pip install --no-cache-dir --target /var/runtime awslambdaric boto3
+
+ENTRYPOINT [ "/lambda-entrypoint.sh" ]
