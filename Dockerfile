@@ -10,16 +10,17 @@ RUN yum -y update && \
     yum clean all
 
 FROM base as builder
-RUN yum -y install wget yum-utils && \
+RUN yum -y install yum-utils && \
     yum -y groupinstall "Development Tools" && \
     yum-builddep -y python3 && \
     yum clean all
 
 ARG OPENSSL_VERSION=1.1.1s
+ARG OPENSSL_KEY=B8EF1A6BA9DA2D5C
 RUN cd "$(mktemp -d)" && \
-    wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz.asc && \
-    wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz && \
-    gpg --keyserver hkps://keys.openpgp.org --recv-keys B8EF1A6BA9DA2D5C && \
+    curl https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz.asc --remote-name && \
+    curl https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz --remote-name && \
+    gpg --keyserver hkps://keys.openpgp.org --recv-keys ${OPENSSL_KEY} && \
     gpg --verify openssl-${OPENSSL_VERSION}.tar.gz.asc openssl-${OPENSSL_VERSION}.tar.gz && \
     tar xf openssl-${OPENSSL_VERSION}.tar.gz && \
     cd openssl-${OPENSSL_VERSION} && \
@@ -28,10 +29,11 @@ RUN cd "$(mktemp -d)" && \
     make install
 
 ARG PYTHON_VERSION=3.11.0
+ARG PYTHON_KEY=64E628F8D684696D
 RUN cd "$(mktemp -d)" && \
-    wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz.asc && \
-    wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz && \
-    gpg --keyserver hkps://keys.openpgp.org --recv-keys 64E628F8D684696D && \
+    curl https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz.asc --remote-name && \
+    curl https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz --remote-name && \
+    gpg --keyserver hkps://keys.openpgp.org --recv-keys ${PYTHON_KEY} && \
     gpg --verify Python-${PYTHON_VERSION}.tar.xz.asc Python-${PYTHON_VERSION}.tar.xz && \
     tar xf Python-${PYTHON_VERSION}.tar.xz && \
     cd Python-${PYTHON_VERSION} && \
@@ -41,10 +43,13 @@ RUN cd "$(mktemp -d)" && \
 
 FROM base
 COPY --from=builder /var/lang /var/lang
-RUN ln -s /var/lang/bin/python3       /var/lang/bin/python && \
+RUN ln -s /var/lang/bin/python3           /var/lang/bin/python && \
     ln -s /var/lang/bin/pip3              /var/lang/bin/pip && \
     ln -s /var/lang/bin/pydoc3            /var/lang/bin/pydoc && \
     ln -s /var/lang/bin/python3-config    /var/lang/bin/python-config
+
+RUN curl https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie -o /usr/local/bin/aws-lambda-rie && \
+    chmod +x /usr/local/bin/aws-lambda-rie
 
 RUN python3 -m pip install -U --no-cache-dir pip setuptools wheel && \
     python3 -m pip install --no-cache-dir --target /var/runtime awslambdaric boto3
