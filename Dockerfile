@@ -7,6 +7,7 @@ ENV LANG=en_US.UTF-8 \
     LAMBDA_TASK_ROOT=/var/task \
     LAMBDA_RUNTIME_DIR=/var/runtime
 RUN yum -y update && \
+    yum -y install shadow-utils && \
     yum clean all
 
 FROM base as builder
@@ -58,5 +59,8 @@ COPY lambda-entrypoint.sh /
 COPY runtime /var/runtime
 WORKDIR /var/task
 COPY src src
+
+RUN /usr/sbin/useradd lambdauser -d /var/task
+USER lambdauser
 
 ENTRYPOINT [ "/lambda-entrypoint.sh", "src/lambda-poc/lambda_function.lambda_handler"]
