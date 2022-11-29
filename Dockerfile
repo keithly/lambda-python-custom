@@ -55,8 +55,8 @@ RUN curl https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/l
 RUN python3 -m pip install -U --no-cache-dir pip setuptools wheel && \
     python3 -m pip install --no-cache-dir --target /var/runtime awslambdaric boto3
 
-COPY lambda-entrypoint.sh /
-COPY runtime /var/runtime
+COPY lambda/lambda-entrypoint.sh /
+COPY lambda/runtime /var/runtime
 WORKDIR /var/task
 COPY src src
 
