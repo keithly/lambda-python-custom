@@ -31,14 +31,12 @@ jobs:
 
       - uses: docker/setup-buildx-action@v2
       - uses: docker/build-push-action@v3
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         with:
           context: .
           push: true
           tags: |
-            $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
-            $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            ${{ steps.login-ecr.outputs.registry }}/lambda-python-custom:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/lambda-python-custom:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
