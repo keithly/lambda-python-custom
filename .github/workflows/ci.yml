@@ -38,8 +38,8 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "image_uri=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Update Lambda and Publish
         run: |
-          aws lambda update-function-code --function-name lambda-python-custom --image-uri ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ steps.build-image.outputs.image }} --publish
+          aws lambda update-function-code --function-name lambda-python-custom --image-uri ${{ steps.build-image.outputs.image_uri }} --publish
