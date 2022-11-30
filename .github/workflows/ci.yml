@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 env:
-  ECR_REPOSITORY: ${{ github.repository }}
+  ECR_REPOSITORY: lambda-python-custom
 
 jobs:
   build-push-deploy:
@@ -42,4 +42,4 @@ jobs:
 
       - name: Update Lambda and Publish
         run: |
-          aws lambda update-function-code --function-name ${{ github.repository }} --image-uri ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ steps.build-image.outputs.image }} --publish
+          aws lambda update-function-code --function-name lambda-python-custom --image-uri ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ steps.build-image.outputs.image }} --publish
