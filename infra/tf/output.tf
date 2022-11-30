@@ -9,3 +9,7 @@ output "function_url" {
 output "image_digest" {
   value = data.aws_ecr_image.lambda_image.image_digest
 }
+
+output "image_tags" {
+  value = data.aws_ecr_image.lambda_image.image_tags
+}

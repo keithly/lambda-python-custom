@@ -1,7 +1,4 @@
 resource "aws_lambda_function" "python_custom" {
-  depends_on = [
-    null_resource.ecr_image
-  ]
   function_name = "lambda-python-custom"
   role          = aws_iam_role.lambda_python_custom.arn
   package_type  = "Image"
