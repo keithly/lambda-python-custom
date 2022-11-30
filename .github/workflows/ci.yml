@@ -42,6 +42,6 @@ jobs:
 
       - name: Update Lambda and Publish
         run: |
-          image_digest=$(aws ecr list-images --repository-name $ECR_REPOSITORY --query "imageIds[?imageTag == ${{ github.sha }}].imageDigest" --output text)
-          image_uri=${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY@$image_digest
+          image_digest=$(aws ecr list-images --repository-name lambda-python-custom --query "imageIds[?imageTag == ${{ github.sha }}].imageDigest" --output text)
+          image_uri=${{ steps.login-ecr.outputs.registry }}/lambda-python-custom@$image_digest
           aws lambda update-function-code --function-name lambda-python-custom --image-uri ${{ steps.build-image.outputs.image_uri }} --publish
