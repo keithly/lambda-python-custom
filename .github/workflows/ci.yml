@@ -38,7 +38,7 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          image_digest=$(aws ecr list-images --repository-name $ECR_REPOSITORY --query "imageIds[?imageTag == $IMAGE_TAG].imageDigest" --output text)
+          image_digest=$(aws ecr list-images --repository-name $ECR_REPOSITORY --query "imageIds[?imageTag == '$IMAGE_TAG'].imageDigest" --output text)
           echo "image_uri=$ECR_REGISTRY/$ECR_REPOSITORY:$image_digest" >> $GITHUB_OUTPUT
 
       - name: Update Lambda and Publish
