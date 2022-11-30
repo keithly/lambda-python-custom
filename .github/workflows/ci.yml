@@ -36,9 +36,9 @@ jobs:
         with:
           context: .
           push: true
-          tags:
-            - $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
-            - $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          tags: |
+            $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
+            $ECR_REGISTRY/$ECR_REPOSITORY:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
