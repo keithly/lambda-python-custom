@@ -3,6 +3,12 @@ name: Deploy to ECR and Lambda
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - .gitignore
+      - lambda/**
+      - src/**
 
 permissions:
   contents: read
