@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.44.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "~> 2.2.3"
+    }
   }
 }
 
@@ -30,4 +34,14 @@ provider "aws" {
 locals {
   ecr_repository_name = "lambda-python-custom"
   ecr_image_tag       = "latest"
+}
+
+data "external" "git" {
+  program = [
+    "git",
+    "log",
+    "--pretty=format:{ \"sha\": \"%H\" }",
+    "-1",
+    "HEAD"
+  ]
 }
