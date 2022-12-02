@@ -3,12 +3,7 @@ name: Deploy to ECR and Lambda
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - Dockerfile
-      - .dockerignore
-      - .gitignore
-      - lambda/**
-      - src/**
+  pull_request:
 
 permissions:
   contents: read
@@ -37,6 +32,15 @@ jobs:
 
       - uses: docker/setup-buildx-action@v2
       - uses: docker/build-push-action@v3
+        if: github.event_name == 'pull_request'
+        with:
+          context: .
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/lambda-python-custom:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: docker/build-push-action@v3
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
           context: .
           push: true
@@ -46,7 +50,33 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Update Lambda and Publish
-        run: |
-          image_uri=${{ steps.login-ecr.outputs.registry }}/lambda-python-custom:${{ github.sha }}
-          aws lambda update-function-code --function-name lambda-python-custom --image-uri $image_uri --publish
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.6
+
+      - name: Check Terraform Format
+        id: fmt
+        run: terraform -chdir='infra/tf' fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform -chdir='infra/tf' init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform -chdir='infra/tf' validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform -chdir='infra/tf' plan -var 'image_tag=${{ github.sha }}' -no-color -out=tfplan
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Apply
+        id: apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform -chdir='infra/tf' apply -auto-approve tfplan
+        continue-on-error: true
