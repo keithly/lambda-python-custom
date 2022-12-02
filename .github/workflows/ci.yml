@@ -31,22 +31,30 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - uses: docker/setup-buildx-action@v2
-      - uses: docker/build-push-action@v3
-        if: github.event_name == 'pull_request'
+
+      - name: Docker Build
+        uses: docker/build-push-action@v3
         with:
           context: .
+          load: true
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - uses: docker/build-push-action@v3
+
+      - name: Test Docker Image
+        run: |
+          docker run --rm --init ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v3
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         with:
           context: .
           push: true
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
