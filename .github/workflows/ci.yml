@@ -36,7 +36,7 @@ jobs:
         with:
           context: .
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/lambda-python-custom:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - uses: docker/build-push-action@v3
@@ -45,8 +45,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/lambda-python-custom:${{ github.sha }}
-            ${{ steps.login-ecr.outputs.registry }}/lambda-python-custom:latest
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
