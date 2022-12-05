@@ -3,22 +3,22 @@ resource "aws_iam_role" "this" {
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement: [
-        {
-            Effect: "Allow",
-            Action: "logs:CreateLogGroup",
-            Resource: "arn:${local.partition}:logs:${var.region}:${local.account_id}:*"
-        },
-        {
-            Effect: "Allow",
-            Action: [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-            ],
-            Resource: [
-                "arn:${local.partition}:logs:${var.region}:${local.account_id}:log-group:${aws_cloudwatch_log_group.this.name}:*"
-            ]
-        }
+    Statement : [
+      {
+        Effect : "Allow",
+        Action : "logs:CreateLogGroup",
+        Resource : "arn:${local.partition}:logs:${var.region}:${local.account_id}:*"
+      },
+      {
+        Effect : "Allow",
+        Action : [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource : [
+          "arn:${local.partition}:logs:${var.region}:${local.account_id}:log-group:${aws_cloudwatch_log_group.this.name}:*"
+        ]
+      }
     ]
   })
 }
