@@ -25,12 +25,12 @@ resource "aws_iam_policy" "lambda" {
 
 data "aws_iam_policy_document" "lambda" {
   statement {
-    actions   = [
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ]
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
     resources = ["${aws_cloudwatch_log_group.this.arn}:*"]
-    effect = "Allow"
+    effect    = "Allow"
   }
 }
 
