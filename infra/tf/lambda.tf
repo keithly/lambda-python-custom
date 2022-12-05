@@ -1,11 +1,13 @@
-resource "aws_lambda_function" "python_custom" {
-  function_name = "lambda-python-custom"
-  role          = aws_iam_role.lambda_python_custom.arn
+resource "aws_lambda_function" "this" {
+  function_name = var.function_name
+  role          = aws_iam_role.this.arn
   package_type  = "Image"
-  image_uri     = "${aws_ecr_repository.repo.repository_url}:${var.image_tag}"
+  image_uri     = "${aws_ecr_repository.this.repository_url}:${var.image_tag}"
+
+  depends_on = [aws_cloudwatch_log_group.this]
 }
 
-resource "aws_lambda_function_url" "latest" {
-  function_name      = aws_lambda_function.python_custom.function_name
+resource "aws_lambda_function_url" "this" {
+  function_name      = aws_lambda_function.this.function_name
   authorization_type = "NONE"
 }
