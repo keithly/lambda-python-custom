@@ -20,7 +20,7 @@ resource "aws_iam_role_policy_attachment" "this" {
 resource "aws_iam_policy" "lambda" {
   name = "lambda-${var.function_name}"
 
-  policy = data.aws_iam_policy_document.lambda
+  policy = data.aws_iam_policy_document.lambda.json
 }
 
 data "aws_iam_policy_document" "lambda" {
