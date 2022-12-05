@@ -26,7 +26,11 @@ provider "aws" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+
 locals {
-  ecr_repository_name = "lambda-python-custom"
-  ecr_image_tag       = "latest"
+  account_id          = data.aws_caller_identity.current.account_id
+  partition           = data.aws_partition.current.partition
+  ecr_repository_name = var.function_name
 }
