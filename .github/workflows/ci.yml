@@ -62,18 +62,18 @@ jobs:
         name: Cache TFLint plugin dir
         with:
           path: ~/.tflint.d/plugins
-          key: ${{ runner.os }}-tflint-${{ hashFiles('infra/tf/.tflint.hcl') }}
+          key: ${{ runner.os }}-tflint-${{ hashFiles('**/.tflint.hcl') }}
 
       - uses: terraform-linters/setup-tflint@v3
         name: Setup TFLint
         with:
           tflint_version: v0.43.0
 
-      - name: Show TFLint version
-        run: tflint --version
-
       - name: Init TFLint
         run: tflint --init
+
+      - name: Show TFLint version
+        run: tflint --version
 
       - name: Run TFLint
         run: tflint -f compact
