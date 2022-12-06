@@ -1,9 +1,3 @@
-variable "region" {
-  description = "AWS region"
-  type        = string
-  default     = "us-east-2"
-}
-
 variable "image_tag" {
   description = "the image tag for the docker image in ECR"
   type        = string
