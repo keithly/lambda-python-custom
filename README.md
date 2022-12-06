@@ -31,5 +31,5 @@ Maybe it would make more sense to use the Python 3.9 lambda image as the base. D
 
 [.github/workflows/ci.yml](.github/workflows/ci.yml) 
 
-- Builds, tests, and deploys the docker image to ECR. The test
+- Builds, tests, and deploys the docker image to ECR. Uses github GHA caching. The test just runs the container. 
 - Lints, caches, and runs terraform plan and apply. Apply only runs on git push.
