@@ -70,13 +70,13 @@ jobs:
           tflint_version: v0.43.0
 
       - name: Init TFLint
-        run: tflint --init
+        run: cd infra/tf && tflint --init
 
       - name: Show TFLint version
-        run: tflint --version
+        run: cd infra/tf && tflint --version
 
       - name: Run TFLint
-        run: tflint -f compact
+        run: cd infra/tf && tflint -f compact
 
       - uses: hashicorp/setup-terraform@v2
         with:
