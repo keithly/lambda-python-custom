@@ -7,5 +7,5 @@ def lambda_handler(event, context):
         "headers": {
             "Content-Type": "text/html"
         },
-        "body": f"<h1>Hello World from custom runtime Python {sys.version}</h1><p>{event}</p>"
+        "body": f"<h1>Hello world from custom runtime Python {sys.version}</h1><p>{event}</p>"
     }
