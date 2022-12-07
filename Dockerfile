@@ -29,7 +29,7 @@ RUN cd "$(mktemp -d)" && \
     make -j "$(nproc)" && \
     make install
 
-ARG PYTHON_VERSION=3.11.0
+ARG PYTHON_VERSION=3.11.1
 ARG PYTHON_KEY=64E628F8D684696D
 RUN cd "$(mktemp -d)" && \
     curl https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz.asc --remote-name && \
