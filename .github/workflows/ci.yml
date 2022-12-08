@@ -42,9 +42,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Test Docker Image
-        run: |
-          docker run -p 9000:8080 --rm --init ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+      #      - name: Test Docker Image
+      #        run: |
+      #          docker run -p 9000:8080 --rm --init ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+      #          curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}
 
       - name: Docker Build and Push
         uses: docker/build-push-action@v3
