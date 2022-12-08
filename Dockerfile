@@ -49,7 +49,7 @@ RUN ln -s /var/lang/bin/python3           /var/lang/bin/python && \
     ln -s /var/lang/bin/pydoc3            /var/lang/bin/pydoc && \
     ln -s /var/lang/bin/python3-config    /var/lang/bin/python-config
 
-RUN curl https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie -o /usr/local/bin/aws-lambda-rie && \
+RUN curl https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie -Lo /usr/local/bin/aws-lambda-rie && \
     chmod +x /usr/local/bin/aws-lambda-rie
 
 RUN python3 -m pip install -U --no-cache-dir pip setuptools wheel && \
