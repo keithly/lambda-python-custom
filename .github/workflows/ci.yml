@@ -2,7 +2,7 @@ name: Deploy to ECR and Lambda
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
 
 permissions:
@@ -10,6 +10,7 @@ permissions:
 
 env:
   ECR_REPOSITORY: lambda-python-custom
+  TF_DIR: infra/tf
 
 jobs:
   build-push-deploy:
@@ -71,13 +72,13 @@ jobs:
           tflint_version: v0.43.0
 
       - name: Init TFLint
-        run: cd infra/tf && tflint --init
+        run: cd ${{ env.TF_DIR }} && tflint --init
 
       - name: Show TFLint version
-        run: cd infra/tf && tflint --version
+        run: cd ${{ env.TF_DIR }} && tflint --version
 
       - name: Run TFLint
-        run: cd infra/tf && tflint -f compact
+        run: cd ${{ env.TF_DIR }} && tflint -f compact
 
       - uses: hashicorp/setup-terraform@v2
         with:
@@ -99,19 +100,19 @@ jobs:
 
       - name: Check Terraform Format
         id: fmt
-        run: terraform -chdir='infra/tf' fmt -check
+        run: terraform -chdir='${{ env.TF_DIR }}' fmt -check
 
       - name: Terraform Init
         id: init
-        run: terraform -chdir='infra/tf' init
+        run: terraform -chdir='${{ env.TF_DIR }}' init
 
       - name: Terraform Validate
         id: validate
-        run: terraform -chdir='infra/tf' validate -no-color
+        run: terraform -chdir='${{ env.TF_DIR }}' validate -no-color
 
       - name: Terraform Plan
         id: plan
-        run: terraform -chdir='infra/tf' plan -var 'image_tag=${{ github.sha }}' -no-color -out=tfplan
+        run: terraform -chdir='${{ env.TF_DIR }}' plan -var 'image_tag=${{ github.sha }}' -no-color -out=tfplan
         continue-on-error: true
 
       - name: Terraform Plan Status
@@ -121,5 +122,5 @@ jobs:
       - name: Terraform Apply
         id: apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform -chdir='infra/tf' apply -auto-approve tfplan
+        run: terraform -chdir='${{ env.TF_DIR }}' apply -auto-approve tfplan
         continue-on-error: true
