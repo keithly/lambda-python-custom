@@ -63,4 +63,4 @@ COPY src src
 RUN /usr/sbin/useradd lambdauser -d /var/task
 USER lambdauser
 
-ENTRYPOINT [ "/lambda-entrypoint.sh", "src/lambda-poc/lambda_function.lambda_handler"]
+ENTRYPOINT [ "/lambda-entrypoint.sh", "src/lambda-poc/lambda_function.handler"]

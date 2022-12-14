@@ -1,11 +1,11 @@
-import sys
+import os
+import json
 
 
-def lambda_handler(event, context):
+def handler(event, context):
+    version = os.environ["APP_VERSION"]
     return {
         "statusCode": 200,
-        "headers": {
-            "Content-Type": "text/html"
-        },
-        "body": f"<h1>Hello world from custom runtime Python {sys.version}</h1><p>{event}</p>"
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"Version ": version}),
     }
