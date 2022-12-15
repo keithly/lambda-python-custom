@@ -1,4 +1,4 @@
-ARG AMAZONLINUX_VERSION=2.0.20221103.3-amd64
+ARG AMAZONLINUX_VERSION=2.0.20221210.0-amd64
 FROM public.ecr.aws/amazonlinux/amazonlinux:${AMAZONLINUX_VERSION} as base
 ENV LANG=en_US.UTF-8 \
     TZ=:/etc/localtime \
