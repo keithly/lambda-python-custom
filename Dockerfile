@@ -1,5 +1,6 @@
-ARG AMAZONLINUX_VERSION=2.0.20221210.1-amd64
-FROM public.ecr.aws/amazonlinux/amazonlinux:${AMAZONLINUX_VERSION} as base
+ARG AMAZONLINUX_VERSION=2.0.20221210.1
+ARG ARCH=amd64
+FROM public.ecr.aws/amazonlinux/amazonlinux:${AMAZONLINUX_VERSION}-${ARCH} as base
 ENV LANG=en_US.UTF-8 \
     TZ=:/etc/localtime \
     PATH=/var/lang/bin:/usr/local/bin:/usr/bin/:/bin:/opt/bin \
