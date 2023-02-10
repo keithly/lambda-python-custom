@@ -1,7 +1,7 @@
 # based on this example
 # https://github.com/aws/aws-lambda-python-runtime-interface-client/blob/970e9c1d2613e0ce9c388547c76ac30992ad0e96/README.md
 
-FROM public.ecr.aws/docker/library/python:3.11.1-slim-bullseye as build-image
+FROM public.ecr.aws/docker/library/python:3.11.2-slim-bullseye as build-image
 
 # Install aws-lambda-cpp build dependencies (for awslambdaric) and curl
 RUN apt-get update && \
@@ -27,7 +27,7 @@ RUN pip install \
     --target /src \
     awslambdaric boto3
 
-FROM public.ecr.aws/docker/library/python:3.11.1-slim-bullseye
+FROM public.ecr.aws/docker/library/python:3.11.2-slim-bullseye
 
 WORKDIR /src
 
