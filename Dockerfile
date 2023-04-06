@@ -1,4 +1,4 @@
-ARG AMAZONLINUX_VERSION=2.0.20230207.0
+ARG AMAZONLINUX_VERSION=2.0.20230320.0
 ARG ARCH=amd64
 FROM public.ecr.aws/amazonlinux/amazonlinux:${AMAZONLINUX_VERSION}-${ARCH} as base
 ENV LANG=en_US.UTF-8 \
@@ -30,7 +30,7 @@ RUN cd "$(mktemp -d)" && \
     make -j "$(nproc)" && \
     make install
 
-ARG PYTHON_VERSION=3.11.2
+ARG PYTHON_VERSION=3.11.3
 ARG PYTHON_KEY=64E628F8D684696D
 RUN cd "$(mktemp -d)" && \
     curl https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz.asc --remote-name && \
