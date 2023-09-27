@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.3"
+  required_version = ">= 1.5"
 
   backend "s3" {
     bucket = "krp-project-tfstate"
@@ -10,7 +10,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.62.0"
+      version = "5.18.1"
     }
   }
 }
