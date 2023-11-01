@@ -30,7 +30,7 @@ RUN cd "$(mktemp -d)" && \
     make -j "$(nproc)" && \
     make install
 
-ARG PYTHON_VERSION=3.11.5
+ARG PYTHON_VERSION=3.11.6
 ARG PYTHON_KEY=64E628F8D684696D
 RUN cd "$(mktemp -d)" && \
     curl https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz.asc --remote-name && \
@@ -66,5 +66,7 @@ COPY src src
 
 RUN /usr/sbin/useradd lambdauser -d /var/task
 USER lambdauser
+
+ENV APP_VERSION=1.0.0
 
 ENTRYPOINT [ "/lambda-entrypoint.sh", "src/lambda-poc/lambda_function.handler"]
