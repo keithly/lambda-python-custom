@@ -44,9 +44,12 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
 
-      - name: Test Docker Image
+      - name: Test Run Docker Image
         run: |
           docker run -p 9000:8080 --rm --init ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Test Lambda Endpoint
+        run: |
           curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}
 
       - name: Docker Build and Push
