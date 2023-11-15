@@ -44,7 +44,7 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
 
-      - name: Run the build process with Docker
+      - name: Docker Run
         uses: addnab/docker-run-action@v3
         with:
           image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
