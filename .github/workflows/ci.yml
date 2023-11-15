@@ -44,9 +44,11 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
 
-      - name: Test Run Docker Image
-        run: |
-          docker run -p 9000:8080 --rm --init ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+      - name: Run the build process with Docker
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          options: -p 9000:8080 --rm --init
 
       - name: Test Lambda Endpoint
         run: |
