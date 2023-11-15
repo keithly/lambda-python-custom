@@ -52,7 +52,7 @@ jobs:
 
       - name: Test Lambda Endpoint
         run: |
-          curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}
+          curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
 
       - name: Docker Build and Push
         uses: docker/build-push-action@v5
