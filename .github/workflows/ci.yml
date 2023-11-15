@@ -48,7 +48,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
-          options: -p 9000:8080 --rm --init
+          options: -p 9000:8080 --init
 
       - name: Test Lambda Endpoint
         run: |
