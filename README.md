@@ -23,8 +23,9 @@ the base image, OpenSSL, and Python, but I didn't attempt to pin every dependenc
 reproducibility and convenience.
 
 - Starts with Amazon Linux 2, creates a builder stage from it, copies build artifacts back into the base.
-- Builds OpenSSL and Python from source, checking pgp signatures. The dependencies and build options could no doubt be
-  tweaked, but this is the simplest solution I found that makes a functional Python build.
+- Builds OpenSSL and Python from source, checking pgp signatures. The python build options optimize the build for speed
+  of execution. The dependencies and build options could no doubt be tweaked, but this is the simplest solution I found
+  that makes a functional Python build.
 - Links "python3" to "python"
 - Curls the latest version of
   the [AWS Lambda Runtime Interface Emulator](https://github.com/aws/aws-lambda-runtime-interface-emulator/)
@@ -73,8 +74,8 @@ needing to exist first. The easiest way to handle this is to create it manually,
 
 [.github/workflows/ci.yml](.github/workflows/ci.yml)
 
-- Builds, tests, and deploys the docker image to ECR
+- Builds and deploys the docker image to ECR
     - Images are tagged with the git SHA
     - Uses GitHub GHA caching
-    - The test just runs the container
+    - Testing the container before deploy is TBD
 - Lints, caches, and runs terraform plan and apply. Apply only runs on git push.
