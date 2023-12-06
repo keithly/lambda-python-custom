@@ -1,45 +1,32 @@
-ARG AMAZONLINUX_VERSION=2.0.20231101.0
-ARG ARCH=amd64
-FROM public.ecr.aws/amazonlinux/amazonlinux:${AMAZONLINUX_VERSION}-${ARCH} as base
-ENV LANG=en_US.UTF-8 \
-    TZ=:/etc/localtime \
-    PATH=/var/lang/bin:/usr/local/bin:/usr/bin/:/bin:/opt/bin \
-    LD_LIBRARY_PATH=/var/lang/lib:/lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib:/opt/lib \
-    LAMBDA_TASK_ROOT=/var/task \
-    LAMBDA_RUNTIME_DIR=/var/runtime
-RUN yum -y update && \
-    yum -y install shadow-utils && \
-    yum clean all
+ARG AL_PROVIDED_VERSION=al2023.2023.12.01.08
+ARG ARCH=x86_64
+FROM public.ecr.aws/lambda/provided:${AL_PROVIDED_VERSION}-${ARCH} as base
+RUN dnf -y update && \
+    dnf clean all
 
 FROM base as builder
-RUN yum -y install yum-utils && \
-    yum -y groupinstall "Development Tools" && \
-    yum-builddep -y python3 && \
-    yum clean all
+RUN dnf -y update && \
+    dnf -y install gcc openssl-devel bzip2-devel libffi-devel xz-devel && \
+    dnf clean all
 
-ARG OPENSSL_VERSION=1.1.1s
-ARG OPENSSL_KEY=B8EF1A6BA9DA2D5C
-RUN cd "$(mktemp -d)" && \
-    curl https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz.asc --remote-name && \
-    curl https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz --remote-name && \
-    gpg --keyserver hkps://keys.openpgp.org --recv-keys ${OPENSSL_KEY} && \
-    gpg --verify openssl-${OPENSSL_VERSION}.tar.gz.asc openssl-${OPENSSL_VERSION}.tar.gz && \
-    tar xf openssl-${OPENSSL_VERSION}.tar.gz && \
-    cd openssl-${OPENSSL_VERSION} && \
-    ./config --prefix=/var/lang && \
-    make -j "$(nproc)" && \
-    make install
+RUN curl -Lo /usr/local/bin/cosign https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 && \
+    chmod +x /usr/local/bin/cosign
 
-ARG PYTHON_VERSION=3.11.6
-ARG PYTHON_KEY=64E628F8D684696D
+ARG PYTHON_VERSION=3.12.0
+#ARG PYTHON_KEY=64E628F8D684696D
+
 RUN cd "$(mktemp -d)" && \
-    curl https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz.asc --remote-name && \
-    curl https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz --remote-name && \
-    gpg --keyserver hkps://keys.openpgp.org --recv-keys ${PYTHON_KEY} && \
-    gpg --verify Python-${PYTHON_VERSION}.tar.xz.asc Python-${PYTHON_VERSION}.tar.xz && \
+    curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz.sigstore && \
+    curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz && \
+    cosign verify-blob Python-${PYTHON_VERSION}.tar.xz  \
+        --bundle Python-${PYTHON_VERSION}.tar.xz.sigstore \
+        --certificate-identity=thomas@python.org \
+        --certificate-oidc-issuer=https://accounts.google.com && \
+#    gpg --keyserver hkps://keys.openpgp.org --recv-keys ${PYTHON_KEY} && \
+#    gpg --verify Python-${PYTHON_VERSION}.tar.xz.asc Python-${PYTHON_VERSION}.tar.xz && \
     tar xf Python-${PYTHON_VERSION}.tar.xz && \
     cd Python-${PYTHON_VERSION} && \
-    ./configure --prefix=/var/lang --with-openssl=/var/lang --enable-optimizations --with-lto=full --with-system-ffi --with-computed-gotos --enable-loadable-sqlite-extensions && \
+    ./configure --prefix=/var/lang --enable-optimizations --with-lto=full --with-system-ffi --with-computed-gotos --enable-loadable-sqlite-extensions && \
     make -j "$(nproc)" && \
     make install
 
@@ -52,9 +39,7 @@ RUN ln -s /var/lang/bin/python3           /var/lang/bin/python && \
     ln -s /var/lang/bin/pydoc3            /var/lang/bin/pydoc && \
     ln -s /var/lang/bin/python3-config    /var/lang/bin/python-config
 
-COPY lambda/lambda-entrypoint.sh /
-COPY lambda/install-rie.sh /
-COPY lambda/runtime /var/runtime
+COPY lambda /
 
 RUN ./install-rie.sh
 
