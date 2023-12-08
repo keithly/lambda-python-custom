@@ -1,7 +1,7 @@
 # based on this example
 # https://github.com/aws/aws-lambda-python-runtime-interface-client/blob/970e9c1d2613e0ce9c388547c76ac30992ad0e96/README.md
 
-FROM public.ecr.aws/docker/library/python:3.12.0-slim-bookworm as build-image
+FROM public.ecr.aws/docker/library/python:3.12.1-slim-bookworm as build-image
 
 # Install aws-lambda-cpp build dependencies (for awslambdaric)
 RUN apt-get update && \
@@ -26,7 +26,7 @@ RUN python3 -m pip install -U --no-cache-dir pip setuptools wheel && \
     --target /src \
     awslambdaric boto3
 
-FROM public.ecr.aws/docker/library/python:3.12.0-slim-bookworm
+FROM public.ecr.aws/docker/library/python:3.12.1-slim-bookworm
 
 WORKDIR /src
 
