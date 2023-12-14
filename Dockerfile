@@ -39,7 +39,7 @@ RUN python3 -m pip install -U --no-cache-dir pip setuptools wheel && \
 
 COPY src src
 
-RUN /usr/sbin/useradd lambdauser -d /var/task
+RUN /usr/sbin/useradd lambdauser
 USER lambdauser
 
 ENV APP_VERSION=1.0.0
