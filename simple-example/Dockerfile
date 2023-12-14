@@ -34,6 +34,9 @@ COPY ./lambda-entrypoint.sh /lambda-entrypoint.sh
 COPY --from=build-image /usr/local/bin/aws-lambda-rie /usr/local/bin/aws-lambda-rie
 COPY --from=build-image /src .
 
+RUN useradd lambdauser
+USER lambdauser
+
 ENV APP_VERSION=1.0.0
 
 ENTRYPOINT [ "/lambda-entrypoint.sh"]
