@@ -1,4 +1,4 @@
-ARG AL_PROVIDED_VERSION=al2023.2023.12.14.13
+ARG AL_PROVIDED_VERSION=al2023.2023.12.15.15
 ARG ARCH=x86_64
 FROM public.ecr.aws/lambda/provided:${AL_PROVIDED_VERSION}-${ARCH} as base
 RUN dnf -y update && \
