@@ -97,7 +97,7 @@ jobs:
 
       - name: Check Terraform Format
         id: fmt
-        run: terraform -chdir='${{ env.TF_DIR }}' fmt -check
+        run: terraform -chdir='${{ env.TF_DIR }}' fmt -recursive -check
 
       - name: Terraform Init
         id: init
