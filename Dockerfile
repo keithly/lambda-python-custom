@@ -1,4 +1,4 @@
-ARG AL_PROVIDED_VERSION=al2023.2023.12.15.15
+ARG AL_PROVIDED_VERSION=al2023.2024.02.07.17
 ARG ARCH=x86_64
 FROM public.ecr.aws/lambda/provided:${AL_PROVIDED_VERSION}-${ARCH} as base
 RUN dnf -y update && \
@@ -10,7 +10,7 @@ RUN dnf -y update && \
     dnf -y install gcc openssl-devel bzip2-devel libffi-devel xz-devel zlib-devel tar xz && \
     dnf clean all
 
-ARG PYTHON_VERSION=3.12.1
+ARG PYTHON_VERSION=3.12.2
 
 RUN cd "$(mktemp -d)" && \
     curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz && \
