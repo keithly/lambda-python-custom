@@ -16,7 +16,7 @@ RUN cd "$(mktemp -d)" && \
     curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz && \
     tar xf Python-${PYTHON_VERSION}.tar.xz && \
     cd Python-${PYTHON_VERSION} && \
-    ./configure --prefix=/var/lang --enable-optimizations --with-lto=full --with-system-ffi --with-computed-gotos --enable-loadable-sqlite-extensions && \
+    ./configure --prefix=/var/lang --enable-optimizations --with-lto=full --with-computed-gotos --enable-loadable-sqlite-extensions && \
     make -j "$(nproc)" && \
     make install
 
