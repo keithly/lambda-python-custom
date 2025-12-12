@@ -57,7 +57,7 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         name: Cache TFLint plugin dir
         with:
           path: ~/.tflint.d/plugins
@@ -87,7 +87,7 @@ jobs:
           mkdir --parents ~/.terraform.d/plugin-cache
 
       - name: Cache Terraform
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.terraform.d/plugin-cache
