@@ -2,7 +2,7 @@ name: Deploy to ECR and Lambda
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
 
 permissions:
@@ -19,10 +19,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsAccess
@@ -57,16 +57,16 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         name: Cache TFLint plugin dir
         with:
           path: ~/.tflint.d/plugins
           key: ${{ runner.os }}-tflint-${{ hashFiles('**/.tflint.hcl') }}
 
-      - uses: terraform-linters/setup-tflint@v4
+      - uses: terraform-linters/setup-tflint@v6
         name: Setup TFLint
         with:
-          tflint_version: v0.51.2
+          tflint_version: v0.60.0
 
       - name: Init TFLint
         run: cd ${{ env.TF_DIR }} && tflint --init
@@ -79,7 +79,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.8.5
+          terraform_version: 1.14.3
 
       - name: Config Terraform plugin cache
         run: |
@@ -87,7 +87,7 @@ jobs:
           mkdir --parents ~/.terraform.d/plugin-cache
 
       - name: Cache Terraform
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.terraform.d/plugin-cache
