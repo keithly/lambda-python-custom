@@ -1,11 +1,11 @@
 ARG AL_PROVIDED_VERSION=al2023.2026.01.19.11
 ARG ARCH=x86_64
-FROM public.ecr.aws/lambda/provided:${AL_PROVIDED_VERSION}-${ARCH} as base
+FROM public.ecr.aws/lambda/provided:${AL_PROVIDED_VERSION}-${ARCH} AS base
 RUN dnf -y update && \
     dnf -y install shadow-utils && \
     dnf clean all
 
-FROM base as builder
+FROM base AS builder
 RUN dnf -y update && \
     dnf -y install gcc openssl-devel bzip2-devel libffi-devel xz-devel zlib-devel tar xz && \
     dnf clean all
