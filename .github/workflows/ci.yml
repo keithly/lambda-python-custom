@@ -44,6 +44,17 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
 
+      - name: Docker Run
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          options: -p 9000:8080 --init
+
+      - name: Test Lambda Endpoint
+        run: |
+          docker ps -a
+          curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
+
       - name: Docker Build and Push
         uses: docker/build-push-action@v6
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
