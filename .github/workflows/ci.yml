@@ -66,7 +66,7 @@ jobs:
       - uses: terraform-linters/setup-tflint@v6
         name: Setup TFLint
         with:
-          tflint_version: v0.60.0
+          tflint_version: v0.64.0
 
       - name: Init TFLint
         run: cd ${{ env.TF_DIR }} && tflint --init
